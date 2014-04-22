@@ -10,4 +10,4 @@ project/target/
 *.*~
 
 # Sample output file
-output.txt
+*.out

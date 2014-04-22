@@ -1,0 +1,13 @@
+# Personal data
+config/main.config
+
+# Compiled files
+*.class
+target/
+project/target/
+
+# Linux TMP files
+*.*~
+
+# Sample output file
+output.txt

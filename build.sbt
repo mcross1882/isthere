@@ -2,7 +2,7 @@ name := "isthere"
 
 version := "1.0"
 
-scalaVersion := "2.10.3"
+autoScalaLibrary := false
 
 libraryDependencies += "javax.mail" % "mail" % "1.4.1"
 

@@ -58,8 +58,7 @@ class FileWatcherService
    * @param  WatchService the service listener to bind
    * @return self
    */
-  public FileWatcherService(String uri, WatchService service)
-    throws Exception
+  public FileWatcherService(String uri, WatchService service) throws Exception
   {
     mWatcher = service;
     if (-1 == uri.lastIndexOf("/")) {
@@ -82,7 +81,7 @@ class FileWatcherService
    * @return void
    */
   protected void watchFile(EmailService service, String emailTo, String filename)
-    throws MessagingException, IOException
+    throws InterruptedException, IOException, MessagingException
   {
     boolean hasFile = true;
     File file = new File(filename);
@@ -101,11 +100,7 @@ class FileWatcherService
       StandardWatchEventKinds.ENTRY_MODIFY);
 
     while (!hasFile) {
-      try {
-        key = mWatcher.take();
-      } catch (InterruptedException x) {
-        return;
-      }
+      key = mWatcher.take();
 
       for (WatchEvent<?> event: key.pollEvents()) {
         WatchEvent.Kind kind = event.kind();
@@ -114,7 +109,10 @@ class FileWatcherService
           continue;
         }
 
-        // This generates a link warning and is noted in the javax mail api
+        // This generates a link warning and is noted in the WatcherService API
+        // @see http://docs.oracle.com/javase/tutorial/essential/io/notification.html#name
+        // p.s. fuck this because its actually the recommended remedy...
+        @SuppressWarnings("unchecked")
         WatchEvent<Path> ev = (WatchEvent<Path>)event;
         Path foundFile = ev.context();
 
@@ -128,6 +126,22 @@ class FileWatcherService
       if (!key.reset()) {
         break;
       }
+    }
+  }
+
+  /**
+   * Close the underlying EventWatcher
+   *
+   * @since  1.0
+   * @access public
+   * @return void
+   */
+  public void close()
+  {
+    try {
+      mWatcher.close();
+    } catch (Exception e) {
+      return;
     }
   }
 }

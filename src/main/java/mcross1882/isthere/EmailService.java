@@ -124,7 +124,7 @@ class EmailService
    */
   public void close() throws MessagingException
   {
-    if (null != mTransport) {
+    if (null != mTransport && mTransport.isConnected()) {
       mTransport.close();
     }
   }

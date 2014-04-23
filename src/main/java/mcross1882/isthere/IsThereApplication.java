@@ -22,7 +22,7 @@ import java.nio.file.FileSystems;
  * @access public
  * @author Matthew Cross <matthew@pmg.co>
  */
-class IsThereApplication
+public class IsThereApplication
 {
   /**
    * Static configuration path is always relative to execution directory

@@ -15,7 +15,7 @@ package mcross1882.isthere;
  * @access public
  * @author Matthew Cross <matthew@pmg.co>
  */
-class Email
+public class Email
 {
   private String mTo;
   private String mFrom;

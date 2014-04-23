@@ -5,6 +5,7 @@ config/main.config
 *.class
 target/
 project/target/
+project/project/
 
 # Linux TMP files
 *.*~

@@ -31,7 +31,7 @@ import javax.mail.MessagingException;
  * @access public
  * @author Matthew Cross <matthew@pmg.co>
  */
-class FileWatcherService
+public class FileWatcherService
 {
   /**
    * WatchService to create callbacks for directory changes

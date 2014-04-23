@@ -21,7 +21,7 @@ import javax.activation.*;
  * @access public
  * @author Matthew Cross <matthew@pmg.co>
  */
-class EmailService
+public class EmailService
 {
   protected final String HOST_KEY = "isthere.email.host";
   protected final String USER_KEY = "isthere.email.user";

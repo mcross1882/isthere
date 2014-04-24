@@ -111,7 +111,6 @@ public class EmailService
     message.setText(em.getMessage());
 
     mTransport.sendMessage(message, message.getAllRecipients());
-    System.out.println("Sent message successfully....");
   }
 
   /**
@@ -139,14 +138,18 @@ public class EmailService
    * @throws MessagingException
    * @return void
    */
-  public void sendFileMissingEmail(String to, String filename) throws MessagingException
+  public void sendFileMissingEmail(String to, String from, String filename) 
+    throws MessagingException
   {
     connect();
     sendEmail(new Email()
       .setTo(to)
-      .setFrom("KoddiFileWatcher")
-      .setSubject("File is missing [%s]".format(filename))
-      .setMessage("The file " + filename + " is currently not available. When it arrives I will notify you again.")
+      .setFrom(from)
+      .setSubject(String.format("File is missing [%s]", filename))
+      .setMessage(String.format(
+        "The file %s is currently not available (%s). When it arrives I will notify you again.",
+        filename, new Date().toString()
+      ))
     );
     close();
   }
@@ -161,14 +164,18 @@ public class EmailService
    * @throws MessagingException
    * @return void
    */
-  public void sendFileArrivedEmail(String to, String filename) throws MessagingException
+  public void sendFileArrivedEmail(String to, String from, String filename) 
+    throws MessagingException
   {
     connect();
     sendEmail(new Email()
       .setTo(to)
-      .setFrom("KoddiFileWatcher")
-      .setSubject("File has arrived " + filename)
-      .setMessage("The file " + filename + " has arrived and is ready for processing.")
+      .setFrom(from)
+      .setSubject(String.format("File has arrived [%s]", filename))
+      .setMessage(String.format(
+        "The file %s has arrived and is ready for processing (%s).", 
+        filename, new Date().toString()
+      ))
     );
     close();
   }

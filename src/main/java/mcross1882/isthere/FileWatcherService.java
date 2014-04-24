@@ -11,15 +11,15 @@ package mcross1882.isthere;
 import java.io.IOException;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Scanner;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.WatchEvent;
 import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.util.HashMap;
+import java.util.Scanner;
 import javax.mail.MessagingException;
 
 /**
@@ -55,16 +55,17 @@ public class FileWatcherService
    * @since  1.0
    * @access public
    * @param  String uri base directory to watch
+   * @param  String separator the directory separator to use
    * @param  WatchService the service listener to bind
    * @return self
    */
-  public FileWatcherService(String uri, WatchService service) throws Exception
+  public FileWatcherService(String uri, String separator, WatchService service) throws Exception
   {
     mWatcher = service;
-    if (-1 == uri.lastIndexOf("/")) {
+    if (!uri.contains(separator)) {
       throw new Exception(String.format("%s: Failed to resolve uri [%s].", FileWatcherService.class, uri));
     }
-    mStartingDirectory = Paths.get(uri.substring(0, uri.lastIndexOf("/")) + "/");
+    mStartingDirectory = Paths.get(uri.substring(0, uri.lastIndexOf(separator)) + separator);
   }
 
   /**
@@ -77,10 +78,11 @@ public class FileWatcherService
    * @access protected
    * @param  EmailService service
    * @param  String emailTo the email address to send notification too
+   * @param  String emailFrom the email address to use as the from address
    * @param  String filename the file to watch
    * @return void
    */
-  protected void watchFile(EmailService service, String emailTo, String filename)
+  protected void watchFile(EmailService service, String emailTo, String emailFrom, String filename)
     throws InterruptedException, IOException, MessagingException
   {
     boolean hasFile = true;
@@ -88,10 +90,9 @@ public class FileWatcherService
 
     if (!file.exists() && !file.isDirectory()) {
       hasFile = false;
-      service.sendFileMissingEmail(emailTo, filename);
+      service.sendFileMissingEmail(emailTo, emailFrom, filename);
     } else {
       hasFile = true;
-      System.out.println("File is present");
     }
 
     WatchKey key = mStartingDirectory.register(mWatcher,
@@ -116,10 +117,9 @@ public class FileWatcherService
         WatchEvent<Path> ev = (WatchEvent<Path>)event;
         Path foundFile = ev.context();
 
-        System.out.format("Comparing %s to %s", filename, foundFile);
         if (!hasFile && filename.equals(foundFile.toString())) {
           hasFile = true;
-          service.sendFileArrivedEmail(emailTo, filename);
+          service.sendFileArrivedEmail(emailTo, emailFrom, filename);
         }
       }
 

@@ -11,9 +11,9 @@ package mcross1882.isthere;
 import java.io.IOException;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.FileSystems;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.nio.file.FileSystems;
 
 /**
  * Main entry point for application
@@ -27,8 +27,20 @@ public class IsThereApplication
   /**
    * Static configuration path is always relative to execution directory
    * @since  1.0
+   * @access   protected
+   * @modifier static final
+   * @var      String
    */
   protected static final String CONFIG_FILE = "config/main.config";
+
+  /**
+   * Static directory separator to use when building filepaths
+   * @since    1.1
+   * @access   protected
+   * @modifier static final
+   * @var      String
+   */
+  protected static final String DIRECTORY_SEPARATOR = "/";
 
   /**
    * Application Start Point
@@ -41,35 +53,46 @@ public class IsThereApplication
    */
   public static void main(String[] args)
   {
+    if (args.length < 1) {
+      printHelp();
+      return;
+    }
+
+    if (!args[0].contains(DIRECTORY_SEPARATOR)) {
+      System.out.println("Warning: No directory specified defaulting to the current working directory.");
+      args[0] = "." + DIRECTORY_SEPARATOR + args[0];
+    }
+
+    String filename = args[0].substring(args[0].lastIndexOf(DIRECTORY_SEPARATOR)+1);
+    if (null == filename || 0 == filename.length()) {
+      System.out.println("Warning: No file was specified aborting...");
+      return;
+    }
+
     HashMap<String, String> params = null;
     try {
       params = loadConfiguration();
     } catch(Exception e) {
-      e.printStackTrace();
+      System.err.println(String.format("Failed to load configuration file: %s", e.getMessage()));
       return;
     }
 
+    System.out.println(String.format("Watching %s [%s]", args[0], filename));
     FileWatcherService fileService = null;
     try {
-      fileService = new FileWatcherService(args[0], FileSystems.getDefault().newWatchService());
-    } catch (Exception e) {
-      System.err.println(String.format("Caught Exception: %s", e.getMessage()));
-      return;
-    }
+      fileService = new FileWatcherService(args[0], DIRECTORY_SEPARATOR, FileSystems.getDefault().newWatchService());
 
-    System.out.println("Connecting to " + params.get("host") + " as " + params.get("user"));
-    try {
       EmailService service = new EmailService(params.get("host"),
         params.get("user"),
         params.get("pass"),
         Integer.parseInt(params.get("port")));
 
-      fileService.watchFile(service, params.get("emailTo"), args[0].substring(args[0].lastIndexOf("/")+1));
+      fileService.watchFile(service, params.get("emailTo"), params.get("emailFrom"), filename);
 
       service.close();
       fileService.close();
     } catch (Exception e) {
-      e.printStackTrace();
+      System.err.println(String.format("Caught Exception: %s", e.getMessage()));
     }
   }
 
@@ -113,5 +136,23 @@ public class IsThereApplication
       return;
     }
     params.put(fields[0].trim(), fields[1].trim());
+  }
+
+  /**
+   * Prints the help dialog
+   *
+   * @since    1.1
+   * @access   protected
+   * @modifier static
+   * @return   void
+   */
+  protected static void printHelp()
+  {
+    System.out.println(
+        "isthere -- File notifications made simple\n"
+      + "Website: https://github.com/mcross1882/isthere\n"
+      + "----------------------------------------------\n"
+      + "Syntax: isthere [file]\n"
+    );
   }
 }

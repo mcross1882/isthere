@@ -158,7 +158,10 @@ public class IsThereApplication
         "isthere -- File notifications made simple\n"
       + "Website: https://github.com/mcross1882/isthere\n"
       + "----------------------------------------------\n"
-      + "Syntax: isthere [file]\n"
+      + "Syntax: isthere [file] [config]\n"
+      + "\n"
+      + "file   -- the file to watch for\n"
+      + "config -- Optional configuration file to use\n"
     );
   }
   

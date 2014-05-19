@@ -25,23 +25,23 @@ import java.util.Scanner;
 public class IsThereApplication
 {
   /**
-   * Static configuration path is always relative to execution directory
-   * @since  1.0
-   * @access   protected
-   * @modifier static final
-   * @var      String
-   */
-  protected static final String CONFIG_FILE = "config/main.config";
-
-  /**
    * Static directory separator to use when building filepaths
    * @since    1.1
    * @access   protected
    * @modifier static final
    * @var      String
    */
-  protected static final String DIRECTORY_SEPARATOR = "/";
-
+  protected static final String DIRECTORY_SEPARATOR = System.getProperty("file.separator");
+  
+  /**
+   * Static configuration path is always relative to execution directory
+   * @since  1.0
+   * @access   protected
+   * @modifier static final
+   * @var      String
+   */
+  protected static final String CONFIG_DIR = "config";
+  
   /**
    * Application Start Point
    *
@@ -68,15 +68,20 @@ public class IsThereApplication
       System.out.println("Warning: No file was specified aborting...");
       return;
     }
+    
+    String configName = "main";
+    if (args.length == 2) {
+      configName = args[1];
+    }
 
     HashMap<String, String> params = null;
     try {
-      params = loadConfiguration();
+      params = loadConfiguration(configName);
     } catch(Exception e) {
       System.err.println(String.format("Failed to load configuration file: %s", e.getMessage()));
       return;
     }
-
+    
     System.out.println(String.format("Watching %s [%s]", args[0], filename));
     FileWatcherService fileService = null;
     try {
@@ -88,7 +93,7 @@ public class IsThereApplication
         Integer.parseInt(params.get("port")));
 
       fileService.watchFile(service, params.get("emailTo"), params.get("emailFrom"), filename);
-
+      
       service.close();
       fileService.close();
     } catch (Exception e) {
@@ -103,14 +108,15 @@ public class IsThereApplication
    * @since    1.0
    * @access   protected
    * @modifier static
+   * @param    name the configuration module to load
    * @throws   FileNotFoundException
    * @return   HashMap<String, String> Key-value configruation values
    */
-  protected static HashMap<String, String> loadConfiguration()
+  protected static HashMap<String, String> loadConfiguration(String name)
     throws FileNotFoundException
   {
     HashMap<String, String> params = new HashMap<String, String>();
-    Scanner reader = new Scanner(new File(CONFIG_FILE));
+    Scanner reader = new Scanner(new File(buildFilename(name)));
 
     while(reader.hasNext()) {
       setParameter(params, reader.nextLine());
@@ -154,5 +160,18 @@ public class IsThereApplication
       + "----------------------------------------------\n"
       + "Syntax: isthere [file]\n"
     );
+  }
+  
+  /**
+   * Build a config filename
+   *
+   * @since   1.2
+   * @access  protected
+   * @param   name the module to load
+   * @return  string fully qualified filename
+   */
+  protected static String buildFilename(String name)
+  {
+    return String.format("%s%s%s.config", CONFIG_DIR, DIRECTORY_SEPARATOR, name);
   }
 }

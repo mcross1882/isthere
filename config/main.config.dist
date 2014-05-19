@@ -3,3 +3,5 @@ user: username@gmail.com
 pass: password123
 port: 465
 emailTo: receiver@gmail.com
+emailFrom: sender@gmail.com
+

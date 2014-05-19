@@ -1,6 +1,6 @@
 name := "isthere"
 
-version := "1.0"
+version := "1.2"
 
 autoScalaLibrary := false
 

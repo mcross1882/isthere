@@ -65,7 +65,7 @@ public class FileWatcherService
     if (!uri.contains(separator)) {
       throw new Exception(String.format("%s: Failed to resolve uri [%s].", FileWatcherService.class, uri));
     }
-    mStartingDirectory = Paths.get(uri.substring(0, uri.lastIndexOf(separator)) + separator);
+    mStartingDirectory = FileSystems.getDefault().getPath(uri.substring(0, uri.lastIndexOf(separator))).toAbsolutePath();
   }
 
   /**
@@ -86,7 +86,9 @@ public class FileWatcherService
     throws InterruptedException, IOException, MessagingException
   {
     boolean hasFile = true;
-    File file = new File(filename);
+
+    Path expectedPath = mStartingDirectory.resolve(filename);
+    File file = expectedPath.toFile();
 
     if (!file.exists() && !file.isDirectory()) {
       hasFile = false;
@@ -115,9 +117,9 @@ public class FileWatcherService
         // p.s. fuck this because its actually the recommended remedy...
         @SuppressWarnings("unchecked")
         WatchEvent<Path> ev = (WatchEvent<Path>)event;
-        Path foundFile = ev.context();
+        Path foundFile = mStartingDirectory.resolve(ev.context());
 
-        if (!hasFile && filename.equals(foundFile.toString())) {
+        if (!hasFile && expectedPath.equals(foundFile)) {
           hasFile = true;
           service.sendFileArrivedEmail(emailTo, emailFrom, filename);
         }

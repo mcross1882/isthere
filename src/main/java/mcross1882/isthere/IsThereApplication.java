@@ -19,7 +19,6 @@ import java.util.Scanner;
  * Main entry point for application
  *
  * @since  1.0
- * @access public
  * @author Matthew Cross <matthew@pmg.co>
  */
 public class IsThereApplication
@@ -70,28 +69,43 @@ public class IsThereApplication
     }
     
     String configName = "main";
-    if (args.length == 2) {
+    if (args.length >= 2) {
       configName = args[1];
     }
+    
+    IsThereApplication app = new IsThereApplication();
 
     HashMap<String, String> params = null;
     try {
-      params = loadConfiguration(configName);
+      params = app.loadConfiguration(configName);
+      app.startFileWatcher(args[0], filename, params);
     } catch(Exception e) {
-      System.err.println(String.format("Failed to load configuration file: %s", e.getMessage()));
+      System.err.println(String.format("Caught Exception %s: %s", e.toString(), e.getMessage()));
       return;
     }
-    
-    System.out.println(String.format("Watching %s [%s]", args[0], filename));
+  }
+  
+  /**
+   * Starts the file watcher service until the resource appears
+   *
+   * @since  1.3
+   * @param  fullPath the absolute path to the file
+   * @param  filename the file to load
+   * @param  params key value pair of imported settings
+   * @return void
+   */
+  protected void startFileWatcher(String fullPath, String filename, HashMap<String,String> params)
+  {
+    System.out.println(String.format("Watching %s [%s]", fullPath, filename));
     FileWatcherService fileService = null;
     try {
-      fileService = new FileWatcherService(args[0], DIRECTORY_SEPARATOR, FileSystems.getDefault().newWatchService());
+      fileService = new FileWatcherService(fullPath, DIRECTORY_SEPARATOR, FileSystems.getDefault().newWatchService());
 
       EmailService service = new EmailService(params.get("host"),
         params.get("user"),
         params.get("pass"),
         Integer.parseInt(params.get("port")));
-
+        
       fileService.watchFile(service, params.get("emailTo"), params.get("emailFrom"), filename);
       
       service.close();
@@ -106,17 +120,15 @@ public class IsThereApplication
    * key-value pairs of configuration values
    *
    * @since    1.0
-   * @access   protected
-   * @modifier static
    * @param    name the configuration module to load
    * @throws   FileNotFoundException
    * @return   HashMap<String, String> Key-value configruation values
    */
-  protected static HashMap<String, String> loadConfiguration(String name)
+  protected HashMap<String, String> loadConfiguration(String name)
     throws FileNotFoundException
   {
     HashMap<String, String> params = new HashMap<String, String>();
-    Scanner reader = new Scanner(new File(buildFilename(name)));
+    Scanner reader = new Scanner(getClass().getResourceAsStream(buildFilename(name)));
 
     while(reader.hasNext()) {
       setParameter(params, reader.nextLine());
@@ -128,12 +140,10 @@ public class IsThereApplication
   /**
    * Parses a parameter line where values are separted by :
    *
-   * @since    1.0
-   * @access   protected
-   * @param    HashMap<String, String> parmater map
-   * @param    String line the line to split
-   * @modifier static
-   * @return   void
+   * @since  1.0
+   * @param  HashMap<String, String> parmater map
+   * @param  String line the line to split
+   * @return void
    */
   protected static void setParameter(HashMap<String, String> params, String line)
   {
@@ -148,8 +158,6 @@ public class IsThereApplication
    * Prints the help dialog
    *
    * @since    1.1
-   * @access   protected
-   * @modifier static
    * @return   void
    */
   protected static void printHelp()
@@ -169,12 +177,11 @@ public class IsThereApplication
    * Build a config filename
    *
    * @since   1.2
-   * @access  protected
    * @param   name the module to load
    * @return  string fully qualified filename
    */
   protected static String buildFilename(String name)
   {
-    return String.format("%s%s%s.config", CONFIG_DIR, DIRECTORY_SEPARATOR, name);
+    return String.format("/%s.config", name);
   }
 }

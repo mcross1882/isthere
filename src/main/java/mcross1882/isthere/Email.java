@@ -12,7 +12,6 @@ package mcross1882.isthere;
  * Entity class for storing email meta data
  *
  * @since  1.0
- * @access public
  * @author Matthew Cross <matthew@pmg.co>
  */
 public class Email
@@ -26,7 +25,6 @@ public class Email
    * Set the "to" field
    *
    * @since  1.0
-   * @access public
    * @param  String to
    * @return this
    */
@@ -40,7 +38,6 @@ public class Email
    * Return the "to" field
    *
    * @since  1.0
-   * @access public
    * @return String
    */
   public String getTo()
@@ -53,7 +50,6 @@ public class Email
    * Set the "from" field
    *
    * @since  1.0
-   * @access public
    * @param  String from
    * @return this
    */
@@ -67,7 +63,6 @@ public class Email
    * Return the "from" field
    *
    * @since  1.0
-   * @access public
    * @return String
    */
   public String getFrom()
@@ -79,7 +74,6 @@ public class Email
    * Set the "subject" field
    *
    * @since  1.0
-   * @access public
    * @param  String subject
    * @return this
    */
@@ -93,7 +87,6 @@ public class Email
    * Return the "subject" field
    *
    * @since  1.0
-   * @access public
    * @return String
    */
   public String getSubject()
@@ -119,7 +112,6 @@ public class Email
    * Return the "message" field
    *
    * @since  1.0
-   * @access public
    * @return String
    */
   public String getMessage()

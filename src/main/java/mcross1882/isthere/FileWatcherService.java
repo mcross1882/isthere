@@ -28,7 +28,6 @@ import javax.mail.MessagingException;
  * notification email to alert the user.
  *
  * @since  1.0
- * @access public
  * @author Matthew Cross <matthew@pmg.co>
  */
 public class FileWatcherService
@@ -37,7 +36,6 @@ public class FileWatcherService
    * WatchService to create callbacks for directory changes
    *
    * @since  1.0
-   * @accces protected
    */
   protected WatchService mWatcher = null;
 
@@ -45,7 +43,6 @@ public class FileWatcherService
    * The starting/root directory to listen for changes
    *
    * @since  1.0
-   * @accces protected
    */
   protected Path mStartingDirectory;
 
@@ -53,7 +50,6 @@ public class FileWatcherService
    * Constructs a FileWatcherService base off the provided uri
    *
    * @since  1.0
-   * @access public
    * @param  String uri base directory to watch
    * @param  String separator the directory separator to use
    * @param  WatchService the service listener to bind
@@ -75,7 +71,6 @@ public class FileWatcherService
    * a second email will be dispatched notifying the user it has arrived.
    *
    * @since  1.0
-   * @access protected
    * @param  EmailService service
    * @param  String emailTo the email address to send notification too
    * @param  String emailFrom the email address to use as the from address
@@ -89,20 +84,19 @@ public class FileWatcherService
 
     Path expectedPath = mStartingDirectory.resolve(filename);
     File file = expectedPath.toFile();
-
+    WatchKey key = null;
+    
     if (!file.exists() && !file.isDirectory()) {
       hasFile = false;
       service.sendFileMissingEmail(emailTo, emailFrom, filename);
-    } else {
-      hasFile = true;
+      
+      key = mStartingDirectory.register(mWatcher,
+        StandardWatchEventKinds.ENTRY_CREATE,
+        StandardWatchEventKinds.ENTRY_DELETE,
+        StandardWatchEventKinds.ENTRY_MODIFY);
     }
 
-    WatchKey key = mStartingDirectory.register(mWatcher,
-      StandardWatchEventKinds.ENTRY_CREATE,
-      StandardWatchEventKinds.ENTRY_DELETE,
-      StandardWatchEventKinds.ENTRY_MODIFY);
-
-    while (!hasFile) {
+    while (null != key && !hasFile) {
       key = mWatcher.take();
 
       for (WatchEvent<?> event: key.pollEvents()) {
@@ -135,7 +129,6 @@ public class FileWatcherService
    * Close the underlying EventWatcher
    *
    * @since  1.0
-   * @access public
    * @return void
    */
   public void close()

@@ -18,7 +18,6 @@ import javax.activation.*;
  * emails to smtp mail servers
  *
  * @since  1.0
- * @access public
  * @author Matthew Cross <matthew@pmg.co>
  */
 public class EmailService
@@ -32,7 +31,6 @@ public class EmailService
    * System and stored email properties
    *
    * @since  1.0
-   * @access protected
    */
   protected Properties mProperties;
 
@@ -40,7 +38,6 @@ public class EmailService
    * Email session
    *
    * @since  1.0
-   * @access protected
    */
   protected Session mSession;
 
@@ -48,7 +45,6 @@ public class EmailService
    * Email Transport
    *
    * @since  1.0
-   * @access protected
    */
   protected Transport mTransport;
 
@@ -56,7 +52,6 @@ public class EmailService
    * Constructs an EmailService from the meta data provided in the constructor arguments
    *
    * @since  1.0
-   * @access public
    * @param  String host the host to connect
    * @param  String user the account username
    * @param  String pass the account password
@@ -81,7 +76,6 @@ public class EmailService
    * Connect to the SMTP host
    *
    * @since  1.0
-   * @access public
    * @throws MessagingException
    * @return void
    */
@@ -97,7 +91,6 @@ public class EmailService
    * Send an email
    *
    * @since  1.0
-   * @access public
    * @param  Email em the email class to send
    * @throws MessagingException
    * @return void
@@ -117,7 +110,6 @@ public class EmailService
    * Close the current connection
    *
    * @since  1.0
-   * @access public
    * @throws MessagingException
    * @return void
    */
@@ -132,7 +124,6 @@ public class EmailService
    * Send a missing file email to a user
    *
    * @since  1.0
-   * @access public
    * @param  String to
    * @param  String filename
    * @throws MessagingException
@@ -158,7 +149,6 @@ public class EmailService
    * Send a file arrived email
    *
    * @since  1.0
-   * @access public
    * @param  String to
    * @param  String filename
    * @throws MessagingException

@@ -50,10 +50,9 @@ public class FileWatcherService
    * Constructs a FileWatcherService base off the provided uri
    *
    * @since  1.0
-   * @param  String uri base directory to watch
-   * @param  String separator the directory separator to use
-   * @param  WatchService the service listener to bind
-   * @return self
+   * @param  uri base directory to watch
+   * @param  separator the directory separator to use
+   * @param  service listener to bind
    */
   public FileWatcherService(String uri, String separator, WatchService service) throws Exception
   {
@@ -71,11 +70,10 @@ public class FileWatcherService
    * a second email will be dispatched notifying the user it has arrived.
    *
    * @since  1.0
-   * @param  EmailService service
-   * @param  String emailTo the email address to send notification too
-   * @param  String emailFrom the email address to use as the from address
-   * @param  String filename the file to watch
-   * @return void
+   * @param  service the email service sender
+   * @param  emailTo the email address to send notification too
+   * @param  emailFrom the email address to use as the from address
+   * @param  filename the file to watch
    */
   protected void watchFile(EmailService service, String emailTo, String emailFrom, String filename)
     throws InterruptedException, IOException, MessagingException
@@ -129,7 +127,6 @@ public class FileWatcherService
    * Close the underlying EventWatcher
    *
    * @since  1.0
-   * @return void
    */
   public void close()
   {

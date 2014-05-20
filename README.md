@@ -16,6 +16,7 @@ All the configuration values are located in `config/main.config` and the followi
 - `pass` The SMTP account password (string)
 - `port` Port number to connect (integer)
 - `emailTo` The email address for notification emails to be sent
+- `emailFrom` The emaill address to set in the FROM field
 
 ### Usage
 

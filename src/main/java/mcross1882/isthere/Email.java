@@ -25,7 +25,7 @@ public class Email
    * Set the "to" field
    *
    * @since  1.0
-   * @param  String to
+   * @param  to who the email should be sent too
    * @return this
    */
   public Email setTo(String to)
@@ -50,7 +50,7 @@ public class Email
    * Set the "from" field
    *
    * @since  1.0
-   * @param  String from
+   * @param  from who the email is from
    * @return this
    */
   public Email setFrom(String from)
@@ -74,7 +74,7 @@ public class Email
    * Set the "subject" field
    *
    * @since  1.0
-   * @param  String subject
+   * @param  subject the email subject line
    * @return this
    */
   public Email setSubject(String subject)
@@ -98,8 +98,7 @@ public class Email
    * Set the "message" field
    *
    * @since  1.0
-   * @access public
-   * @param  String message
+   * @param  message the email body
    * @return this
    */
   public Email setMessage(String message)

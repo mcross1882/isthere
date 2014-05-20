@@ -25,30 +25,28 @@ public class IsThereApplication
 {
   /**
    * Static directory separator to use when building filepaths
-   * @since    1.1
-   * @access   protected
-   * @modifier static final
-   * @var      String
+   * @since 1.1
    */
   protected static final String DIRECTORY_SEPARATOR = System.getProperty("file.separator");
   
   /**
    * Static configuration path is always relative to execution directory
-   * @since  1.0
-   * @access   protected
-   * @modifier static final
-   * @var      String
+   * @since 1.0
    */
   protected static final String CONFIG_DIR = "config";
   
   /**
+   * Required fields in the configuration file
+   *
+   * @since 1.3
+   */
+  protected static final String[] REQUIRED_FIELDS = {"host", "user", "pass", "port", "emailto", "emailfrom"};
+  
+  /**
    * Application Start Point
    *
-   * @since    1.0
-   * @access   public
-   * @param    String[] args command line arguments
-   * @modifier static
-   * @return   void
+   * @since  1.0
+   * @param  args command line arguments
    */
   public static void main(String[] args)
   {
@@ -92,7 +90,6 @@ public class IsThereApplication
    * @param  fullPath the absolute path to the file
    * @param  filename the file to load
    * @param  params key value pair of imported settings
-   * @return void
    */
   protected void startFileWatcher(String fullPath, String filename, HashMap<String,String> params)
   {
@@ -106,7 +103,7 @@ public class IsThereApplication
         params.get("pass"),
         Integer.parseInt(params.get("port")));
         
-      fileService.watchFile(service, params.get("emailTo"), params.get("emailFrom"), filename);
+      fileService.watchFile(service, params.get("emailto"), params.get("emailfrom"), filename);
       
       service.close();
       fileService.close();
@@ -121,11 +118,11 @@ public class IsThereApplication
    *
    * @since    1.0
    * @param    name the configuration module to load
-   * @throws   FileNotFoundException
-   * @return   HashMap<String, String> Key-value configruation values
+   * @throws   FileNotFoundException, Exception
+   * @return   Key-value configruation values
    */
   protected HashMap<String, String> loadConfiguration(String name)
-    throws FileNotFoundException
+    throws FileNotFoundException, Exception
   {
     HashMap<String, String> params = new HashMap<String, String>();
     Scanner reader = new Scanner(getClass().getResourceAsStream(buildFilename(name)));
@@ -134,6 +131,13 @@ public class IsThereApplication
       setParameter(params, reader.nextLine());
     }
     reader.close();
+    
+    for (String field : REQUIRED_FIELDS) {
+      if (!params.containsKey(field)) {
+        throw new Exception(String.format("Missing %s field in configuration file\n", field));
+      }
+    }
+    
     return params;
   }
 
@@ -141,24 +145,22 @@ public class IsThereApplication
    * Parses a parameter line where values are separted by :
    *
    * @since  1.0
-   * @param  HashMap<String, String> parmater map
-   * @param  String line the line to split
-   * @return void
+   * @param  params the key value parameters
+   * @param  line the line to split
    */
-  protected static void setParameter(HashMap<String, String> params, String line)
+  protected void setParameter(HashMap<String, String> params, String line)
   {
     String[] fields = line.split(":");
     if (fields.length < 2) {
       return;
     }
-    params.put(fields[0].trim(), fields[1].trim());
+    params.put(fields[0].trim().toLowerCase(), fields[1].trim());
   }
 
   /**
    * Prints the help dialog
    *
    * @since    1.1
-   * @return   void
    */
   protected static void printHelp()
   {

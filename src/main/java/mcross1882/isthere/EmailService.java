@@ -52,12 +52,11 @@ public class EmailService
    * Constructs an EmailService from the meta data provided in the constructor arguments
    *
    * @since  1.0
-   * @param  String host the host to connect
-   * @param  String user the account username
-   * @param  String pass the account password
-   * @param  int port the port number
+   * @param  host the host to connect
+   * @param  user the account username
+   * @param  pass the account password
+   * @param  port the port number
    * @throws MessagingException, NoSuchProviderException
-   * @return self
    */
   public EmailService(String host, String user, String pass, int port)
     throws MessagingException, NoSuchProviderException
@@ -77,7 +76,6 @@ public class EmailService
    *
    * @since  1.0
    * @throws MessagingException
-   * @return void
    */
   public void connect() throws MessagingException
   {
@@ -91,9 +89,8 @@ public class EmailService
    * Send an email
    *
    * @since  1.0
-   * @param  Email em the email class to send
+   * @param  em the email class to send
    * @throws MessagingException
-   * @return void
    */
   public void sendEmail(Email em) throws MessagingException
   {
@@ -111,7 +108,6 @@ public class EmailService
    *
    * @since  1.0
    * @throws MessagingException
-   * @return void
    */
   public void close() throws MessagingException
   {
@@ -124,10 +120,10 @@ public class EmailService
    * Send a missing file email to a user
    *
    * @since  1.0
-   * @param  String to
-   * @param  String filename
+   * @param  to TO field in the email
+   * @param  from FROM field in the email
+   * @param  filename the attachment file
    * @throws MessagingException
-   * @return void
    */
   public void sendFileMissingEmail(String to, String from, String filename) 
     throws MessagingException
@@ -149,10 +145,10 @@ public class EmailService
    * Send a file arrived email
    *
    * @since  1.0
-   * @param  String to
-   * @param  String filename
+   * @param  to TO field in the email
+   * @param  from FROM field in the email
+   * @param  filename the attachment file
    * @throws MessagingException
-   * @return void
    */
   public void sendFileArrivedEmail(String to, String from, String filename) 
     throws MessagingException

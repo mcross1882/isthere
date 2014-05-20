@@ -4,12 +4,12 @@ File notifications made simple
 
 ### Overview
 
-isthere checks if a file exists otherwise it will send a notification email to the user in `config/main.config`. If the file is not present the application will watch
+isthere checks if a file exists otherwise it will send a notification email to the user in `src/main/resources/main.config`. If the file is not present the application will watch
 the expected directory until the file arrives. Once it does a second email will be sent out notifying you.
 
 ### Setup
 
-All the configuration values are located in `config/main.config` and the following properties must be set in order for the application to function...
+All the configuration values are located in `src/main/resources/main.config` and the following properties must be set in order for the application to function...
 
 - `host` The SMTP host to connect (string)
 - `user` The SMTP account username (string)

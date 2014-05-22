@@ -79,7 +79,6 @@ public class FileWatcherService
     throws InterruptedException, IOException, MessagingException
   {
     boolean hasFile = true;
-
     Path expectedPath = mStartingDirectory.resolve(filename);
     File file = expectedPath.toFile();
     WatchKey key = null;

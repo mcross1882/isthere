@@ -4,6 +4,9 @@ version := "1.3"
 
 autoScalaLibrary := false
 
-libraryDependencies += "javax.mail" % "mail" % "1.4.1"
+libraryDependencies ++= Seq(
+    "com.typesafe" % "config" % "1.2.0",
+    "javax.mail" % "mail" % "1.4.1"
+)
 
 packageArchetype.java_application

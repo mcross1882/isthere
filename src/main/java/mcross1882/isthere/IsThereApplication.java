@@ -14,8 +14,6 @@ import java.io.IOException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.FileSystems;
-import java.util.HashMap;
-import java.util.Scanner;
 
 /**
  * Main entry point for application
@@ -30,20 +28,20 @@ public class IsThereApplication
    * @since 1.1
    */
   protected static final String DIRECTORY_SEPARATOR = System.getProperty("file.separator");
-  
+
   /**
    * Required fields in the configuration file
    *
    * @since 1.3
    */
   protected static final String[] REQUIRED_FIELDS = {"host", "user", "pass", "port", "emailto", "emailfrom"};
-  
+
   /**
    * Configuration parameters defined in src/universal/conf/app.config
    * @since  1.3
    */
   protected Config mConfig = null;
-  
+
   /**
    * Constructs the main application with a specific group
    * configuration
@@ -54,7 +52,7 @@ public class IsThereApplication
   {
     mConfig = ConfigFactory.load(group).getConfig("emailSettings");
   }
-  
+
   /**
    * Application Start Point
    *
@@ -78,23 +76,20 @@ public class IsThereApplication
       System.out.println("Warning: No file was specified aborting...");
       return;
     }
-    
+
     String configName = "application";
     if (args.length >= 2) {
       configName = args[1];
     }
-    
-    IsThereApplication app = new IsThereApplication(configName);
 
-    HashMap<String, String> params = null;
     try {
+      IsThereApplication app = new IsThereApplication(configName);
       app.startFileWatcher(args[0], filename);
     } catch(Exception e) {
       System.err.println(String.format("Caught Exception %s: %s", e.toString(), e.getMessage()));
-      return;
     }
   }
-  
+
   /**
    * Starts the file watcher service until the resource appears
    *
@@ -113,12 +108,12 @@ public class IsThereApplication
         mConfig.getString("user"),
         mConfig.getString("pass"),
         mConfig.getInt("port"));
-        
-      fileService.watchFile(service, 
-        mConfig.getString("emailTo"), 
-        mConfig.getString("emailFrom"), 
+
+      fileService.watchFile(service,
+        mConfig.getString("emailTo"),
+        mConfig.getString("emailFrom"),
         filename);
-      
+
       service.close();
       fileService.close();
     } catch (Exception e) {

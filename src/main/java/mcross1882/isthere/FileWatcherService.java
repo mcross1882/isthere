@@ -18,8 +18,6 @@ import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
-import java.util.HashMap;
-import java.util.Scanner;
 import javax.mail.MessagingException;
 
 /**
@@ -82,11 +80,11 @@ public class FileWatcherService
     Path expectedPath = mStartingDirectory.resolve(filename);
     File file = expectedPath.toFile();
     WatchKey key = null;
-    
+
     if (!file.exists() && !file.isDirectory()) {
       hasFile = false;
       service.sendFileMissingEmail(emailTo, emailFrom, filename);
-      
+
       key = mStartingDirectory.register(mWatcher,
         StandardWatchEventKinds.ENTRY_CREATE,
         StandardWatchEventKinds.ENTRY_DELETE,

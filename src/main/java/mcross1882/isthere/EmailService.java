@@ -125,7 +125,7 @@ public class EmailService
    * @param  filename the attachment file
    * @throws MessagingException
    */
-  public void sendFileMissingEmail(String to, String from, String filename) 
+  public void sendFileMissingEmail(String to, String from, String filename)
     throws MessagingException
   {
     connect();
@@ -150,7 +150,7 @@ public class EmailService
    * @param  filename the attachment file
    * @throws MessagingException
    */
-  public void sendFileArrivedEmail(String to, String from, String filename) 
+  public void sendFileArrivedEmail(String to, String from, String filename)
     throws MessagingException
   {
     connect();
@@ -159,7 +159,7 @@ public class EmailService
       .setFrom(from)
       .setSubject(String.format("File has arrived [%s]", filename))
       .setMessage(String.format(
-        "The file %s has arrived and is ready for processing (%s).", 
+        "The file %s has arrived and is ready for processing (%s).",
         filename, new Date().toString()
       ))
     );

@@ -56,7 +56,8 @@ public class IsThereApplication
    */
   public IsThereApplication(String homeDirectory, String group)
   {
-    mConfig = ConfigFactory.load(String.format("%s%s%s".format(HOME_ENVIRONMENT_KEY, DIRECTORY_SEPARATOR, group))).getConfig("emailSettings");
+    String path = String.format("%s%s%s.conf", homeDirectory, DIRECTORY_SEPARATOR, group); 
+    mConfig = ConfigFactory.parseFile(new File(path)).getConfig("emailSettings");
   }
 
   /**
@@ -90,21 +91,28 @@ public class IsThereApplication
 
     try {
       IsThereApplication app = new IsThereApplication(appHome, configName);
-      app.startFileWatcher(args[0], filename);
+      app.startFileWatcher(String.format("%s%s%s", appHome, DIRECTORY_SEPARATOR, filename), filename);
     } catch(Exception e) {
       System.err.println(String.format("Caught Exception %s: %s", e.toString(), e.getMessage()));
     }
   }
   
+  /**
+   * Extracts the base file name and validates that it is a directory
+   *
+   * @since  1.0
+   * @param  args the command line arguments
+   * @return the base name of the filepath
+   */
   protected static String extractAndValidateBaseName(String[] args)
   {
-        String filename = "";
-        if (!args[0].contains(DIRECTORY_SEPARATOR)) {
-            System.out.println("Warning: No directory specified defaulting to the current working directory.");
-            filename = "." + DIRECTORY_SEPARATOR + args[0];
-        }
-        return filename.substring(filename.lastIndexOf(DIRECTORY_SEPARATOR)+1);
+    String filename = "";
+    if (!args[0].contains(DIRECTORY_SEPARATOR)) {
+      System.out.println("Warning: No directory specified defaulting to the current working directory.");
+      filename = "." + DIRECTORY_SEPARATOR + args[0];
     }
+    return filename.substring(filename.lastIndexOf(DIRECTORY_SEPARATOR)+1);
+  }
 
   /**
    * Starts the file watcher service until the resource appears

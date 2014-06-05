@@ -150,9 +150,10 @@ public class EmailService
    * @param  to TO field in the email
    * @param  from FROM field in the email
    * @param  filename the attachment file
+   * @param  fileSize the size of the file in bytes
    * @throws MessagingException
    */
-  public void sendFileArrivedEmail(String to, String from, String filename)
+  public void sendFileArrivedEmail(String to, String from, String filename, long fileSize)
     throws MessagingException
   {
     connect();
@@ -163,8 +164,8 @@ public class EmailService
       .setMessage(String.format(
         "The file %s has arrived and is ready for processing.\n"
         + "Time: %s\n"
-        + "Size: %s\n",
-        filename, new Date().toString()
+        + "Size: %d bytes\n",
+        filename, new Date().toString(), fileSize
       ))
     );
     close();

@@ -9,6 +9,11 @@ the expected directory until the file arrives. Once it does a second email will 
 
 ### Setup
 
+First you must declare an environment variables called `ISTHERE_HOME` that points to the isthere home directory. This is OS dependent for instance..
+
+- On windows it might be `%APP_DATA%\isthere\conf`
+- On Linux-esque machines it might be `/etc/isthere/conf`
+
 All the configuration values are located in `src/main/resources/main.config` and the following properties must be set in order for the application to function...
 
 - `host` The SMTP host to connect (string)

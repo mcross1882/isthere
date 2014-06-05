@@ -110,7 +110,7 @@ public class FileWatcherService
 
         if (!hasFile && expectedPath.equals(foundFile)) {
           hasFile = true;
-          service.sendFileArrivedEmail(emailTo, emailFrom, filename);
+          service.sendFileArrivedEmail(emailTo, emailFrom, filename, foundFile.toFile().length());
         }
       }
 

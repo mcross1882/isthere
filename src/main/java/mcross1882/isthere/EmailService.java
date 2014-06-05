@@ -86,7 +86,7 @@ public class EmailService
   }
 
   /**
-   * Send an email
+   * Send an email 
    *
    * @since  1.0
    * @param  em the email class to send
@@ -134,7 +134,9 @@ public class EmailService
       .setFrom(from)
       .setSubject(String.format("File is missing [%s]", filename))
       .setMessage(String.format(
-        "The file %s is currently not available (%s). When it arrives I will notify you again.",
+        "The file %s is currently not available or missing. "
+        + "Once it is available you will be notified again.\n"
+        + "Time: %s",
         filename, new Date().toString()
       ))
     );
@@ -148,9 +150,10 @@ public class EmailService
    * @param  to TO field in the email
    * @param  from FROM field in the email
    * @param  filename the attachment file
+   * @param  fileSize the size of the file in bytes
    * @throws MessagingException
    */
-  public void sendFileArrivedEmail(String to, String from, String filename)
+  public void sendFileArrivedEmail(String to, String from, String filename, long fileSize)
     throws MessagingException
   {
     connect();
@@ -159,8 +162,10 @@ public class EmailService
       .setFrom(from)
       .setSubject(String.format("File has arrived [%s]", filename))
       .setMessage(String.format(
-        "The file %s has arrived and is ready for processing (%s).",
-        filename, new Date().toString()
+        "The file %s has arrived and is ready for processing.\n"
+        + "Time: %s\n"
+        + "Size: %d bytes\n",
+        filename, new Date().toString(), fileSize
       ))
     );
     close();

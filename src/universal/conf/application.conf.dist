@@ -1,4 +1,4 @@
-emailSettings {
+main {
     host = "smtp.gmail.com"
     user = "username@gmail.com"
     pass = "password123"

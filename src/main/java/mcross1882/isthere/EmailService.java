@@ -134,9 +134,11 @@ public class EmailService
       .setFrom(from)
       .setSubject(String.format("File is missing [%s]", filename))
       .setMessage(String.format(
-        "The file %s is currently not available or missing. "
+        "A file your are watching is currently not available or missing. "
         + "Once it is available you will be notified again.\n"
-        + "Time: %s",
+        + "========================\n"
+        + "File: %s\n"
+        + "Time: %s\n",
         filename, new Date().toString()
       ))
     );
@@ -162,7 +164,9 @@ public class EmailService
       .setFrom(from)
       .setSubject(String.format("File has arrived [%s]", filename))
       .setMessage(String.format(
-        "The file %s has arrived and is ready for processing.\n"
+        "A file you are watching has arrived and is ready for processing.\n"
+        + "========================\n"
+        + "File: %s\n"
         + "Time: %s\n"
         + "Size: %d bytes\n",
         filename, new Date().toString(), fileSize

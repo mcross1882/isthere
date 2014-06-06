@@ -92,14 +92,10 @@ public class IsThereApplication
       if (args.length >= 2) {
         configName = args[0];
         fullPath = args[1];
-        baseName = extractAndValidateBaseName(fullPath);
       } else {
         fullPath = args[0];
-        baseName = extractAndValidateBaseName(fullPath);
       }
-      
-      System.out.println(baseName);
-      System.out.println(fullPath);
+      baseName = extractAndValidateBaseName(fullPath);
       
       IsThereApplication app = new IsThereApplication(configName);
       app.startFileWatcher(baseName, fullPath);
@@ -135,11 +131,11 @@ public class IsThereApplication
    *
    * @since  1.4
    */
-  protected void findApplicationDirectory()
+  protected void findApplicationDirectory() throws Exception
   {
     mHomeDirectory = System.getenv(HOME_ENVIRONMENT_KEY);
     if (null == mHomeDirectory || 0 == mHomeDirectory.length()) {
-        System.out.println(String.format("Warning: %s environment variable is not defined", HOME_ENVIRONMENT_KEY));
+        throw new Exception(String.format("Warning: %s environment variable is not defined", HOME_ENVIRONMENT_KEY));
     }
   }
     

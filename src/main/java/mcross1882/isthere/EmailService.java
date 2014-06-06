@@ -128,8 +128,7 @@ public class EmailService
   public void sendFileMissingEmail(String to, String from, String filename)
     throws MessagingException
   {
-    connect();
-    sendEmail(new Email()
+    prepareEmail(new Email()
       .setTo(to)
       .setFrom(from)
       .setSubject(String.format("File is missing [%s]", filename))
@@ -142,7 +141,6 @@ public class EmailService
         filename, new Date().toString()
       ))
     );
-    close();
   }
 
   /**
@@ -158,20 +156,26 @@ public class EmailService
   public void sendFileArrivedEmail(String to, String from, String filename, long fileSize)
     throws MessagingException
   {
-    connect();
-    sendEmail(new Email()
+    prepareEmail(new Email()
       .setTo(to)
       .setFrom(from)
       .setSubject(String.format("File has arrived [%s]", filename))
       .setMessage(String.format(
-        "A file you are watching has arrived and is ready for processing.\n"
-        + "========================\n"
-        + "File: %s\n"
-        + "Time: %s\n"
-        + "Size: %d bytes\n",
-        filename, new Date().toString(), fileSize
-      ))
+          "A file you are watching has arrived and is ready for processing.\n"
+          + "========================\n"
+          + "File: %s\n"
+          + "Time: %s\n"
+          + "Size: %d bytes\n",
+          filename, new Date().toString(), fileSize
+        ))
     );
+  }
+  
+  protected void prepareEmail(Email em)
+    throws MessagingException
+  {
+    connect();
+    sendEmail(em);
     close();
   }
 }

@@ -112,6 +112,7 @@ public class IsThereApplication
    * @param baseConfigName the email configuration name to load
    */
   public IsThereApplication(String baseConfigName)
+    throws Exception
   {
     findApplicationDirectory();
     String path = resolveFilename(baseConfigName + ".conf");
